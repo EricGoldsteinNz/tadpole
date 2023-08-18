@@ -40,8 +40,8 @@ Download the latest .exe file if you are on windows, or the python source folder
 
 You should be able to run the source using:
 python tadpole.py
-Note that you may need to install PyQt5 if you do not have this already using:
-python -m pip install PyQt5
+Note that you may need to install the required libraries if you do not have them already using:
+python -m pip install -r requirements.txt
 
 
 Basic usage steps

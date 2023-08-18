@@ -25,7 +25,6 @@ basedir = os.path.dirname(__file__)
 static_NoDrives = "N/A"
 static_AllSystems = "ALL"
 
-
 def RunFrogTool():
     drive = window.combobox_drive.currentText()
     console = window.combobox_console.currentText()
@@ -78,6 +77,7 @@ def toggle_features(enable: bool):
                 window.menu_os,
                 window.menu_bgm,
                 window.menu_consoleLogos,
+                window.menu_boxart,
                 window.tbl_gamelist]
 
     for feature in features:
@@ -106,7 +106,7 @@ def loadROMsToTable():
             
             # Filename
             cell_filename = QTableWidgetItem(f"{f}")
-            cell_filename.setTextAlignment(Qt.AlignCenter)
+            cell_filename.setTextAlignment(Qt.AlignVCenter)
             cell_filename.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEnabled)
             window.tbl_gamelist.setItem(i, 0, cell_filename)  
             #Filesize
@@ -306,6 +306,26 @@ class BootConfirmDialog(QDialog):
         # Load Initial Image
         self.current_viewer.load_from_bios(self.drive)
 
+        
+class PleaseWaitDialog(QMainWindow):
+    """
+    Dialog used to stop interaction while something is happening from program root.
+    """
+    def __init__(self, message: str = ""):
+        super().__init__()
+
+        self.setWindowTitle("Please Wait")
+        self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxInformation))
+        
+        
+        self.lbl = QLabel(self)
+        #self.text_edit.setFixedSize(500, 500)
+        self.setCentralWidget(self.lbl)
+        self.lbl.setText(message)
+        
+    def setMessage(self, message: str = ""):
+        self.lbl.setText(message)
+
 
 # SubClass QMainWindow to create a Tadpole general interface
 class MainWindow (QMainWindow):
@@ -386,27 +406,35 @@ class MainWindow (QMainWindow):
                                     triggered=self.about)
         self.exit_action = QAction("E&xit", self, shortcut="Ctrl+Q",triggered=self.close)
 
-        # OS Menu
-        self.action_updateToV1_5  = QAction("V1.5", self, triggered=self.UpdatetoV1_5)                                                                              
-        self.action_changeBootLogo  = QAction("Change &Boot Logo", self, triggered=self.changeBootLogo)
-        self.GBABIOSFix_action = QAction("&GBA BIOS Fix", self, triggered=self.GBABIOSFix)
-        self.action_changeShortcuts = QAction("Change Game Shortcuts", self, triggered=self.changeGameShortcuts)
-        self.action_removeShortcutLabels = QAction("Remove Shortcut Labels", self, triggered=self.removeShortcutLabels)
 
-        # Console Logos
-        self.action_consolelogos_Default = QAction("Restore Default", self, triggered=self.ConsoleLogos_RestoreDefault)
-        self.action_consolelogos_Western = QAction("Western Logos", self, triggered=self.ConsoleLogos_WesternLogos)
+
+
 
     def loadMenus(self):
         self.menu_file = self.menuBar().addMenu("&File")
         self.menu_file.addAction(self.exit_action)
+        #self.action_Test = QAction("Test Function", self,triggered=self.testFunction)
+        #self.menu_file.addAction(self.action_Test)
         
+        # OS Menu
         self.menu_os = self.menuBar().addMenu("&OS")
+        # Update Submenu
         self.menu_os.menu_update = self.menu_os.addMenu("Update")
-        self.menu_os.menu_update.addAction(self.action_updateToV1_5)                                                         
+        self.action_updateToV1_5  = QAction("V1.5", self, triggered=self.UpdatetoV1_5)                                                                              
+        self.menu_os.menu_update.addAction(self.action_updateToV1_5)   
+        self.action_changeBootLogo  = QAction("Change &Boot Logo", self, triggered=self.changeBootLogo)
         self.menu_os.addAction(self.action_changeBootLogo)
+        # Console Logos Submenu
+        self.menu_consoleLogos = self.menu_os.addMenu("Console Logos")
+        self.action_consolelogos_Default = QAction("Restore Default", self, triggered=self.ConsoleLogos_RestoreDefault)
+        self.menu_consoleLogos.addAction(self.action_consolelogos_Default)
+        self.action_consolelogos_Western = QAction("Western Logos", self, triggered=self.ConsoleLogos_WesternLogos)
+        self.menu_consoleLogos.addAction(self.action_consolelogos_Western)
+        self.GBABIOSFix_action = QAction("&GBA BIOS Fix", self, triggered=self.GBABIOSFix)
         self.menu_os.addAction(self.GBABIOSFix_action)
+        self.action_changeShortcuts = QAction("Change Game Shortcuts", self, triggered=self.changeGameShortcuts)
         self.menu_os.addAction(self.action_changeShortcuts)
+        self.action_removeShortcutLabels = QAction("Remove Shortcut Labels", self, triggered=self.removeShortcutLabels)
         self.menu_os.addAction(self.action_removeShortcutLabels)
 
         # Background Music Menu
@@ -432,10 +460,12 @@ class MainWindow (QMainWindow):
                                         self,
                                         triggered=self.change_background_music))
 
-        self.menu_consoleLogos = self.menuBar().addMenu("Console Logos")
-        self.menu_consoleLogos.addAction(self.action_consolelogos_Default)
-        self.menu_consoleLogos.addAction(self.action_consolelogos_Western)
-
+        # Download Boxart Menu
+        self.menu_boxart = self.menuBar().addMenu("Boxart")
+        self.DownloadBoxart_action = QAction("Download for zips", self, triggered=self.downloadBoxartForZips)
+        self.menu_boxart.addAction(self.DownloadBoxart_action)
+        
+        # Help Menu
         self.menu_help = self.menuBar().addMenu("&Help")
         self.readme_action = QAction(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarContextHelpButton),
                                      "Read Me",
@@ -444,6 +474,36 @@ class MainWindow (QMainWindow):
         self.menu_help.addSeparator()
         self.menu_help.addAction(self.about_action)
 
+    def testFunction(self):
+        print("Called test function. Remember to disable this before publishing")
+        try:
+            tadpole_functions.downloadROMArt("GBA","E:\GBA\DoEsNoTeXiSt.zip")
+        except tadpole_functions.InvalidURLError:
+            print("URL did not return a valid file")
+            
+    def downloadBoxartForZips(self):
+        """
+        thread_boxart = threading.Thread(target = thread_downloadBoxartForZips)
+        thread_boxart.start()
+        dialog_pleasewait = PleaseWaitDialog("Downloading boxart from Goldsteins Github repo")
+        dialog_pleasewait.exec()
+        """
+        drive = window.combobox_drive.currentText()
+        counter_success = 0
+        counter_total = 0
+        for console in tadpole_functions.systems.keys():
+            if console == "ARCADE":
+                continue
+            zip_files = os.scandir(os.path.join(drive,console))
+            zip_files = list(filter(frogtool.check_zip, zip_files))
+            for file in zip_files:
+                counter_total = counter_total + 1
+                if tadpole_functions.downloadROMArt(console,file):
+                    counter_success = counter_success + 1
+        QMessageBox.about(self, "Downloading Boxart Complete", f"Downloaded {counter_success} covers for {counter_total} zips")
+    #def thread_downloadBoxartForZips():
+        
+    
     def change_background_music(self):
         """event to change background music"""
         if self.sender().text() == "From Local File...":  # handle local file option
@@ -504,7 +564,12 @@ from tzlion on frogtool. Special thanks also goes to wikkiewikkie for many amazi
         window.window_shortcuts.show()
     
     def removeShortcutLabels(self):
-        self.UnderDevelopmentPopup()
+        drive = window.combobox_drive.currentText()
+        if tadpole_functions.stripShortcutText(drive):
+            QMessageBox.about(window, "Successfully removed Shortcut Labels", "Success!.")
+        else:
+            QMessageBox.about(window, "Something went wrong", "An error occured. Please contact EricGoldstein via the RetroHandheld Discord to look into it.")
+        #self.UnderDevelopmentPopup()
         
     def ConsoleLogos_RestoreDefault(self):
         self.ConsoleLogos_change("https://github.com/EricGoldsteinNz/SF2000_Resources/raw/main/ConsoleLogos/default/sfcdr.cpl")
@@ -798,7 +863,7 @@ if __name__ == "__main__":
     window.combobox_console.clear()
     # Add ALL to the list to add this fucntionality from frogtool
     window.combobox_console.addItem(QIcon(), static_AllSystems, static_AllSystems)
-    for console in frogtool.systems.keys():
+    for console in tadpole_functions.systems.keys():
         window.combobox_console.addItem(QIcon(), console, console)
     
     window.show()

@@ -10,6 +10,7 @@ import zlib
 import frogtool
 import requests
 import json
+import logging
 
 
 try:
@@ -39,7 +40,8 @@ class Exception_InvalidPath(Exception):
 class Exception_StopExecution(Exception):
     pass   
     
-    
+class InvalidURLError(Exception):
+    pass
    
 def changeBootLogo(index_path, newLogoFileName):
     # Confirm we arent going to brick the firmware by finding a known version
@@ -437,10 +439,19 @@ def downloadDirectoryFromGithub(location, url):
     return False
     
 def downloadFileFromGithub(outFile, url):
-    r = requests.get(url)
-    with open(outFile, 'wb') as f:
-        print(f'downloading {url} to {outFile}')
-        f.write(r.content)
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(outFile, 'wb') as f:
+                print(f'downloading {url} to {outFile}')
+                f.write(response.content)
+                return True
+        else:
+            print("Error when trying to download a file from Github. Response was not code 200")
+            raise InvalidURLError
+    except Exception as e:
+        print(str(e))
+        return False
 
 def emptyFavourites(drive) -> bool:
     return emptyFile(os.path.join(drive, "Resources", "Favorites.bin"))
@@ -479,11 +490,63 @@ def GBABIOSFix(drive: str):
     try:
         gba_folder_path = os.path.join(drive, "GBA", "mnt", "sda1", "bios")
         roms_folder_path = os.path.join(drive, "ROMS", "mnt", "sda1", "bios")
-        os.makedirs(os.path.dirname(gba_folder_path), exist_ok=True)
-        os.makedirs(os.path.dirname(roms_folder_path), exist_ok=True)
+        os.makedirs(gba_folder_path, exist_ok=True)
+        os.makedirs(roms_folder_path, exist_ok=True)
         shutil.copyfile(gba_bios_path, os.path.join(gba_folder_path, "gba_bios.bin"))
         shutil.copyfile(gba_bios_path, os.path.join(roms_folder_path, "gba_bios.bin"))
     except (OSError, IOError) as error:
         print("! Failed to copy GBA BIOS.")
         print(error)
         raise Exception_InvalidPath
+
+
+ROMART_baseURL = "https://raw.githubusercontent.com/EricGoldsteinNz/libretro-thumbnails/master/"
+ROMArt_console = {  
+    "FC":     "Nintendo - Nintendo Entertainment System",
+    "SFC":    "Nintendo - Super Nintendo Entertainment System",
+    "MD":     "Sega - Mega Drive - Genesis",
+    "GB":     "Nintendo - Game Boy",
+    "GBC":    "Nintendo - Game Boy Color",
+    "GBA":    "Nintendo - Game Boy Advance", 
+    "ARCADE": ""
+}
+
+def downloadROMArt(console : str, ROMpath : str):    
+    try:
+        if console == "" or ROMArt_console[console] == "":
+            print("ROMART invalid console value supplied")
+            return False
+        title = (os.path.splitext(os.path.basename(ROMpath))[0]).split('.')[0]
+        URLtoDownload = f"{ROMART_baseURL}{ROMArt_console[console]}/Named_Boxarts/{title}.png"
+        outFile = os.path.join(os.path.dirname(ROMpath),f"{title}.png")
+        print(f"Trying to download to {outFile} from {URLtoDownload}")
+        if (downloadFileFromGithub(outFile,URLtoDownload)):
+            print("Finished downloading. Success.")
+            return True
+        
+    except Exception as e:
+        logging.exception(f"CRITICAL ERROR while downloading ROMART: {str(e)}")
+    return False
+    
+    
+def stripShortcutText(drive: str):
+    if drive == "???" or drive == "":
+        raise Exception_InvalidPath
+    gakne_path = os.path.join(drive, "Resources", "gakne.ctp")
+    try:
+        gakne = open(gakne_path, "rb")
+        data = bytearray(gakne.read())
+        gakne.close()
+        # Gakne is made up of 8 rows of 4 items for a total of 32 items.
+        # Each image is 144 x 32. Total image size 576 x 256.
+        # To only strip the shortcut text we want to leave the settings menu items. So we have to skip the first 18,432 bytes
+        
+        for i in range (18432, len(data)):
+            data[i-1] = 0x00
+        gakne = open(gakne_path, "wb")
+        gakne.write(data)
+        gakne.close()
+        return True
+    except (OSError, IOError) as e:
+        print(f"! Failed striping shortcut labels. {e}")
+        return False
