@@ -3,3 +3,6 @@ build
 dist
 venv
 frogtool.spec
+tadpole/__pycache__/
+tadpole/ui/__pycache__/
+__pycache__/
