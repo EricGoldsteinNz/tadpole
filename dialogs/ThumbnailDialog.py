@@ -120,6 +120,7 @@ class ROMCoverViewer(QLabel):
         """
         basedir = os.path.dirname(__file__)
         print(f"loading cover from {pathToROM}")
+        self.path = pathToROM  # update path
         with open(pathToROM, "rb") as rom_file:
             rom_content = bytearray(rom_file.read((144*208)*2))
         img = QImage(rom_content[0:((144*208)*2)], 144, 208, QImage.Format_RGB16)
