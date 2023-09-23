@@ -28,6 +28,13 @@ class ThumbnailDialog(QDialog):
         self.current_viewer = ROMCoverViewer(self)
         self.layout_main.addWidget(self.current_viewer, Qt.AlignCenter)
 
+        # Load Initial Image
+        # If it's a supported .z**, open it, otherwise leave it blank
+        file_extension = file_extension = os.path.splitext(filepath)[1]
+        if file_extension == '.zfb' or file_extension == '.zfc' or file_extension == '.zgb' or \
+                                    file_extension == '.zmd' or file_extension == '.zsf': 
+            self.current_viewer.load_from_ROM_inMemory(filepath)
+
         self.layout_main.addWidget(QLabel(" "))  # spacer
 
         # set up new image viewer
@@ -42,6 +49,7 @@ class ThumbnailDialog(QDialog):
         #Save Existing Cover To File Button
         self.button_write = QPushButton("Save Existing to File")
         self.button_write.clicked.connect(self.WriteImgToFile)
+        self.button_write.setDisabled(self.current_viewer.path == "") #Disable saving if the ROM has been detected as not currently having a cover
         self.layout_buttons.addWidget(self.button_write)     
 
         # Save Button
@@ -56,14 +64,12 @@ class ThumbnailDialog(QDialog):
         self.button_cancel.clicked.connect(self.reject)
         self.layout_buttons.addWidget(self.button_cancel)
 
-        # Load Initial Image
-        # If it's a supported .z**, open it, otherwise leave it blank
-        file_extension = file_extension = os.path.splitext(filepath)[1]
-        if file_extension == '.zfb' or file_extension == '.zfc' or file_extension == '.zgb' or \
-                                    file_extension == '.zmd' or file_extension == '.zsf': 
-            self.current_viewer.load_from_ROM_inMemory(filepath)
+
         
     def WriteImgToFile(self):
+        if self.current_viewer.path == "":
+            QMessageBox.warning(self, "Save ROM Cover", "This file was not detected as having a ROM cover.\n If you think this is an error please create an Issue on the Github repository.")
+            return
         newCoverFileName = QFileDialog.getSaveFileName(self,
                                                        'Save Cover',
                                                        'c:\\',

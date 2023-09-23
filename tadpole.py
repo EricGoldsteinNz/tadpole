@@ -1089,7 +1089,7 @@ from tzlion on frogtool. Special thanks also goes to wikkiewikkie & Jason Grieve
 
     def change_theme(self, url):
         qm = QMessageBox()
-        ret = qm.question(window,'Heads up', "Changing themes will ovewrite your game shortcut icons.  You can change them again after the theme is applied.  Are you suer you want to change your theme?" , qm.Yes | qm.No)
+        ret = qm.question(window,'Heads up', "Changing themes will ovewrite your game shortcut icons.  You can change them again after the theme is applied.  Are you sure you want to change your theme?" , qm.Yes | qm.No)
         if ret == qm.No:
             return
         drive = window.combobox_drive.currentText()
