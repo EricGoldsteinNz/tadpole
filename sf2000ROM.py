@@ -22,8 +22,8 @@ class sf2000ROM():
     """
     def setTitle(self, newTitle):
         try:
-            ext = os.path.splitext(self.ROMlocation)[1]
-            newPath = os.path.join(os.path.dirname(self.ROMlocation),newTitle+ext)
+            #ext = os.path.splitext(self.ROMlocation)[1]
+            newPath = os.path.join(os.path.dirname(self.ROMlocation),newTitle)
             os.rename(self.ROMlocation, newPath)
             self.ROMlocation = newPath         
             self.title = newTitle

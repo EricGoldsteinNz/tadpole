@@ -620,11 +620,19 @@ class MainWindow (QMainWindow):
 
 
     def catchTableCellChanged(self,changedRow,changedColumn):
+        console = self.combobox_console.currentText()
         print(f"Changed Cell for ({changedRow},{changedColumn})")
         if self.columns[changedColumn] == self._static_columns_GameName:
             # Update the game name
-            self.ROMList[changedRow].setTitle(self.sender().itemAt(changedColumn,changedRow).text())
-
+            romFullName = self.sender().itemAt(changedColumn,changedRow).text()
+            romExt = os.path.splitext(os.path.basename(romFullName))[1]
+            consoleExt = frogtool.zxx_ext[console]
+            consoleExt = f'.' + consoleExt
+            if romExt != consoleExt:
+                QMessageBox.about(self, "Error","You can't change the extension.")
+                self.loadROMsToTable()
+                return
+            self.ROMList[changedRow].setTitle(romFullName)
     def catchTableCellClicked(self, clickedRow, clickedColumn):
         print(f"clicked Cell for ({clickedRow},{clickedColumn})")
         drive = self.combobox_drive.currentText()
