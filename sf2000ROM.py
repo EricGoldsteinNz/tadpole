@@ -13,7 +13,8 @@ class sf2000ROM():
         if not os.path.isfile(location):
             raise Exception
         self.ROMlocation = location
-        self.title = os.path.splitext(os.path.basename(location))[0]
+        #self.title = os.path.splitext(os.path.basename(location))[0]
+        self.title = os.path.basename(location)
 
 
     """
