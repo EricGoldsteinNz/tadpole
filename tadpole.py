@@ -643,7 +643,7 @@ class MainWindow (QMainWindow):
             viewThumbnail(os.path.join(drive, system, gamename.text()))
         elif self.tbl_gamelist.horizontalHeaderItem(clickedColumn).text() == self._static_columns_Delete: 
             deleteROM(os.path.join(drive, system, gamename.text()))
-        #Only enable deleting when selcted
+        #Only enable deleting when games are selected
         if clickedColumn == 0:
             selected = self.tbl_gamelist.selectedItems()
             if selected:
