@@ -791,18 +791,12 @@ from tzlion on frogtool. Special thanks also goes to wikkiewikkie & Jason Grieve
         ret = qm.question(self,'Delete ROM?', "Are you sure you want to delete " + rom_path +" and rebuild the ROM list? " , qm.Yes | qm.No)
         if ret == qm.Yes:
             try:
-                if console == 'ARCADE':
-                    arcadeZIPROM = tadpole_functions.extractFileNameFromZFB(rom_path)
-                    arcadeZIPPath = os.path.join(drive, console, 'bin', arcadeZIPROM)
-                    if os.path.exists(arcadeZIPPath):
-                        os.remove(arcadeZIPPath)
-                    else:
-                        logging.error("File {arcadeZIPPath} doens't exist")
-                if os.path.exists(rom_path):      
-                    os.remove(rom_path)
-                else:
-                    logging.error("File {rom_path} doens't exist")
-                    QMessageBox.about(self, "Error","Could not delete file.")
+                tadpole_functions.deleteROM(rom_path)
+                #if console == 'ARCADE':
+                #    arcadeZIPROM = tadpole_functions.extractFileNameFromZFB(rom_path)
+                #    arcadeZIPPath = os.path.join(drive, console, 'bin', arcadeZIPROM)
+                #    os.remove(arcadeZIPPath)
+                #os.remove(rom_path)
             except Exception:
                 QMessageBox.about(self, "Error","Could not delete file.")
             RunFrogTool(drive,console)
@@ -1134,6 +1128,7 @@ Note: You can change in settings to either pick your own or try to downlad autom
         if os.path.exists('currentBackground.temp.png'):
             os.remove('currentBackground.temp.png')
 
+    # TODO this should call the existing delete function rather than doubling up
     def deleteROMs(self):       
         drive = self.combobox_drive.currentText()
         console = self.combobox_console.currentText()
@@ -1141,17 +1136,22 @@ Note: You can change in settings to either pick your own or try to downlad autom
         ret = qm.question(self,'Delete ROMs?', "Are you sure you want to delete all selected ROMs?" , qm.Yes | qm.No)
         if ret == qm.No:
             return
+        result = False
         for item in self.tbl_gamelist.selectedItems():
             try:
                 objGame = self.ROMList[item.row()]
-                if console == 'ARCADE':
-                    arcadeZIPROM = tadpole_functions.extractFileNameFromZFB(objGame.ROMlocation)
-                    arcadeZIPPath = os.path.join(drive, console, 'bin', arcadeZIPROM)
-                    os.remove(arcadeZIPPath)
-                os.remove(objGame.ROMlocation)
+                result = tadpole_functions.deleteROM(objGame.ROMlocation)
+                #if console == 'ARCADE':
+                #    arcadeZIPROM = tadpole_functions.extractFileNameFromZFB(objGame.ROMlocation)
+                #    arcadeZIPPath = os.path.join(drive, console, 'bin', arcadeZIPROM)
+                #    os.remove(arcadeZIPPath)
+                #os.remove(objGame.ROMlocation)
             except Exception:
-                QMessageBox.about(self, "Error","Could not delete ROM.")
-        QMessageBox.about(self, "Success",f"Successfully deleted selected ROMs.")
+                result = False
+        if result: 
+            QMessageBox.about(self, "Success",f"Successfully deleted selected ROMs.")
+        else:
+            QMessageBox.about(self, "Error","Could not delete ROM.")
         RunFrogTool(drive,console)
 
     def copyUserSelectedDirectoryButton(self):
