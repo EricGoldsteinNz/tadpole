@@ -107,7 +107,7 @@ like the root of the SD card.  Do you want us to download all the most up to dat
                 msgBox = DownloadProgressDialog()
                 msgBox.setText("Downloading Firmware Update.")
                 msgBox.show()
-                tadpole_functions.DownloadOSFiles(directory, msgBox.progress)
+                tadpole_functions.downloadOSFiles(directory, msgBox.progress)
         QMessageBox().about(self, "Working location", "When you want to go back to using an SD card, select it in the dropdown list of drives.\n\n\When you are ready to ovewrite that SD card, press the 'Copy to SD' button")
 
         #Set the dialog displayed local User Direcotry to the new value

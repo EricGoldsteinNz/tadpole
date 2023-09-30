@@ -9,6 +9,8 @@ class TadpoleConfig():
     _static_general = "tadpole"
     _static_general_userDirectory = "user_directory"
     _static_general_userDirectory_DEFAULT = ""
+    _static_general_tadpole_version = "current_tadpole_version"
+    _static_general_tadpole_version_DEFAULT = "0.5"
     # [thumbnails]
     _static_thumbnails = "Thumbnails"
     _static_thumbnails_view = "ViewInTable"
@@ -45,6 +47,8 @@ class TadpoleConfig():
             self.config[self._static_general] = {}
         if not self.config.has_option(self._static_general, self._static_general_userDirectory):
             self.config[self._static_general][self._static_general_userDirectory] = self._static_general_userDirectory_DEFAULT
+        if not self.config.has_option(self._static_general, self._static_general_tadpole_version):
+            self.config[self._static_general][self._static_general_tadpole_version] = self._static_general_tadpole_version_DEFAULT
         # [Thumbnails]
         if not self.config.has_section(self._static_thumbnails):
             self.config[self._static_thumbnails] = {}
@@ -84,6 +88,13 @@ class TadpoleConfig():
     def getLocalUserDirectory(self):
         return self.getVariable(self._static_general,self._static_general_userDirectory,self._static_general_userDirectory_DEFAULT)
 
+    def getCurrentTadpoleVersion(self):
+        return self.getVariable(self._static_general,self._static_general_tadpole_version,self._static_general_tadpole_version)
+
+    def setCurrentTadpoleVersion(self):
+        print(f"Setting setCurrentTadpoleVersion")
+        self.setVariable(self._static_general, self._static_general_tadpole_version, self._static_general_tadpole_version_DEFAULT)
+    
     def setViewThumbnailsInTable(self, enabled: bool):
         print(f"Setting ViewThumbnailsInTable to ({enabled})")
         self.setVariable(self._static_thumbnails, self._static_thumbnails_view, ("True" if enabled else "False"))
@@ -100,7 +111,6 @@ class TadpoleConfig():
         view = self.getVariable(self._static_thumbnails,self._static_thumbnails_download,self._static_thumbnails_download_DEFAULT)
         return view == "1"
 
-       
     def setThumbnailOverwrite(self, enabled: bool):
         print(f"Setting ThumbnailOverwrite to ({enabled})")
         self.setVariable(self._static_thumbnails, self._static_thumbnails_overwrite, ("True" if enabled else "False"))

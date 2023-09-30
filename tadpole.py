@@ -772,7 +772,7 @@ from tzlion on frogtool. Special thanks also goes to wikkiewikkie & Jason Grieve
         msgBox = DownloadProgressDialog()
         msgBox.setText("Downloading Firmware Update.")
         msgBox.show()
-        tadpole_functions.DownloadOSFiles(correct_drive, msgBox.progress)
+        tadpole_functions.downloadOSFiles(correct_drive, msgBox.progress)
         ret = QMessageBox.question(self, "Try booting",  "Try putting the SD card in the SF2000 and starting it.  Did it work?")
         if ret == qm.No:
             QMessageBox.about(self, "Not booting", "Sorry it didn't work; Consult https://github.com/vonmillhausen/sf2000#bootloader-bug or ask for help on Discord https://discord.gg/retrohandhelds.")
@@ -1314,6 +1314,9 @@ if __name__ == "__main__":
         # Build the Window
         window = MainWindow()
         window.show()
+
+        # Check for latest version
+        tadpole_functions.compareAndDownloadLatestTadpole(tpConf)
 
         # Clear and update the list of consoles. This has to happen before the drive loading in case a valid SD card is already connected
         window.combobox_console.clear()

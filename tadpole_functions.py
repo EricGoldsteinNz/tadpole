@@ -7,9 +7,11 @@ import os
 import shutil
 import hashlib
 import zipfile
+import re
 #feature imports
 import struct
 import frogtool
+import tadpoleConfig
 import requests
 import json
 import logging
@@ -779,7 +781,7 @@ def downloadFileFromGithub(outFile, url):
         return False
 
 
-def DownloadOSFiles(correct_drive, progress): 
+def downloadOSFiles(correct_drive, progress): 
     downloadDirectoryFromGithub(correct_drive,"https://api.github.com/repos/EricGoldsteinNz/SF2000_Resources/contents/OS/V1.6", progress)
     #Make the ROM directories
     os.mkdir(os.path.join(correct_drive,"ARCADE"))
@@ -809,6 +811,28 @@ def DownloadOSFiles(correct_drive, progress):
     downloadFileFromGithub(os.path.join(correct_drive,"bios","bisrv.asd"), "https://raw.githubusercontent.com/EricGoldsteinNz/SF2000_Resources/main/OS/V1.6/bios/bisrv.asd")        
     return True
 
+def compareAndDownloadLatestTadpole(tpConf): 
+    try: 
+        TadpoleReleasesURL = 'https://api.github.com/repos/EricGoldsteinNz/SF2000_Resources/contents/TadpoleReleases'
+        # Get the current file running, pull the version, and convert to float
+        currentTadpoleFloat = float(tpConf.getCurrentTadpoleVersion())
+        response = requests.get(TadpoleReleasesURL) 
+        if response.status_code == 200:
+            data = json.loads(response.content)
+            for item in data:
+                    latsetTadpoleString = item["name"]
+                    latestTadpoleVersionString = re.findall(r"\d+\.\d+", latsetTadpoleString)
+                    latsetTadpoleFloat = float(latestTadpoleVersionString[0])
+                    #Compare the two, if greater or equal, its up to date
+                    if currentTadpoleFloat >= latsetTadpoleFloat:
+                        return False
+                    #Otherwise download the latest
+                    newTadpoleFile = os.path.join(os.getcwd(), item["name"])
+                    downloadFileFromGithub(newTadpoleFile, item["download_url"])
+                    return True
+    except Exception as e:
+        logging.error({e})
+        return False
 def emptyFavourites(drive) -> bool:
     return emptyFile(os.path.join(drive, "Resources", "Favorites.bin"))
     
