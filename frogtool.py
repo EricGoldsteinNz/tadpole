@@ -94,7 +94,7 @@ def getROMList(roms_path):
     filenames = list(map(file_entry_to_name, files))
     return filenames
 
-def process_sys(drive, system, test_mode):
+def process_sys(drive, system, test_mode, top_games=None):
     print(f"Processing {system}")
 
     roms_path = os.path.join(drive,system)
@@ -129,9 +129,9 @@ def process_sys(drive, system, test_mode):
     name_map_cn = dict(zip(filenames, stripped_names))
     name_map_pinyin = dict(zip(filenames, stripped_names))
 
-    write_index_file(name_map_files, sort_without_file_ext, index_path_files, test_mode)
-    write_index_file(name_map_cn, sort_normal, index_path_cn, test_mode)
-    write_index_file(name_map_pinyin, sort_normal, index_path_pinyin, test_mode)
+    write_index_file(name_map_files, sort_without_file_ext, index_path_files, test_mode, top_games)
+    write_index_file(name_map_cn, sort_normal, index_path_cn, test_mode, top_games)
+    write_index_file(name_map_pinyin, sort_normal, index_path_pinyin, test_mode, top_games)
 
     print("Done\n")
     return f"Finished updating {system} with {no_files} ROMs"
@@ -278,7 +278,7 @@ def check_and_back_up_file(file_path):
             raise StopExecution
 
 
-def write_index_file(name_map, sort_func, index_path, test_mode):
+def write_index_file(name_map, sort_func, index_path, test_mode, top_games=None):
     # entries must maintain a consistent order between all indexes, but what that order actually is doesn't matter
     # so use alphabetised filenames for this
     sorted_filenames = sorted(name_map.keys())
@@ -296,6 +296,27 @@ def write_index_file(name_map, sort_func, index_path, test_mode):
     # the rest are pointers to the display names in the desired display order
     # so sort display names according to the display order, and build a list of pointers in that order
     sorted_display_names = sort_func(name_map.values())
+
+    # unless Top Games feature is enabled; if so separate the Top Games and place at the top of the list
+    if top_games and sorted_display_names:
+
+        # Check if sorted_display_names have file extensions, if not strip the extensions from top_games
+        has_extension = any(sorted_display_names[0].endswith("." + ext) for ext in zxx_ext.values())
+        if not has_extension:
+            for ext in zxx_ext.values():
+                top_games = [game[:-len(ext) - 1] if game.endswith("." + ext) else game for game in top_games]
+
+        top_sorted = [game for game in top_games if game in sorted_display_names]
+        remainder_games_sorted = [game for game in sorted_display_names if game not in top_sorted]
+
+        # Log error for games in top list but not found in the main list
+        for game in top_games:
+            if game not in sorted_display_names:
+                print(f"WARNING: Game '{game}' is in the Top Games List but not found in the main list.")
+
+        # Combine top list and remainder list
+        sorted_display_names = top_sorted + remainder_games_sorted
+
     sorted_pointers = map(lambda name: pointers_by_name[name], sorted_display_names)
     for current_pointer in sorted_pointers:
         metadata_bytes += int_to_4_bytes_reverse(current_pointer)
@@ -324,6 +345,3 @@ def write_index_file(name_map, sort_func, index_path, test_mode):
 
 def check_sys_valid(system):
     return system and (system in systems.keys() or system == "ALL")
-
-
-

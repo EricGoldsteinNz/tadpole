@@ -9,7 +9,7 @@ import tadpole_functions
 import frogtool
 from dialogs.DownloadProgressDialog import DownloadProgressDialog
 
-# Subclass Qidget to create a Settings window        
+# Subclass Qidget to create a Settings window
 class SettingsDialog(QDialog):
     """
         This window should be called without a parent widget so that it is created in its own window.
@@ -48,6 +48,17 @@ class SettingsDialog(QDialog):
         thubmnailOvewriteCombo.setCurrentIndex(0 if tpConf.getThumbnailOverwrite() else 1)
         thubmnailOvewriteCombo.currentTextChanged.connect(self.thumbnailOverwriteChanged)
         self.layout_main.addWidget(thubmnailOvewriteCombo)
+
+        self.layout_main.addWidget(QLabel(" "))  # spacer
+
+        # Sorting options options
+        self.top_games_enabled = self.tpConf.getTopGamesEnabled()  # Get the initial state from configuration
+        self.layout_main.addWidget(QLabel("Sorting options"))
+        self.top_games_sorting_checkbox = QCheckBox("Enable Top Games List (TopGames.txt)", self)
+        self.top_games_sorting_checkbox.setToolTip("Adds the games specified in TopGames.txt to the top of the game listing")
+        self.top_games_sorting_checkbox.clicked.connect(self.topGamesToggled)
+        self.layout_main.addWidget(self.top_games_sorting_checkbox)
+        self.top_games_sorting_checkbox.setChecked(self.top_games_enabled)
 
         self.layout_main.addWidget(QLabel(" "))  # spacer
 
@@ -122,4 +133,6 @@ like the root of the SD card.  Do you want us to download all the most up to dat
 
     def thumbnailViewClicked(self):
         self.tpConf.setViewThumbnailsInTable(self.sender().isChecked())
-  
+
+    def topGamesToggled(self):
+        self.tpConf.setTopGamesEnabled(self.top_games_sorting_checkbox.isChecked())

@@ -1169,6 +1169,32 @@ def addThumbnail(rom_path, drive, system, new_thumbnail, ovewrite):
             #QMessageBox.about(window, "Change ROM Cover", "An error occurred.")
             return False
 
+def read_top_games(system):
+    try:
+        current_system_name = None
+        games = []
+        with open("TopGames.txt", 'r') as file:
+            for line in file:
+                line = line.strip()
+                if line.endswith(":"):  # Line ending with colon indicates a system name
+                    if current_system_name == system:  # Check if the previous system matches the provided system
+                        return games
+                    current_system_name = line[:-1]  # Remove the colon to get the system name
+                    games = []  # Clear the games list
+                elif line:  # Non-empty line indicates a game name
+                    games.append(line)
+            # Check the last system's games if it matches the provided system
+            if current_system_name == system:
+                return games
+        return []  # Return an empty list if the system was not found
+    except FileNotFoundError:
+        print(f"Error: File 'TopGames.txt' not found. Top Game Sorting will not be enabled.")
+        return []
+    except Exception as e:
+        print(f"Error while reading the TopGames.txt file: {e}")
+        return []
+
+
 #Thanks to Dteyn for putting the python together from here: https://github.com/Dteyn/SF2000_Battery_Level_Patcher/blob/master/main.py
 #Thanks to OpenAI for writing the class and converting logging to prints
 class BatteryPatcher:
