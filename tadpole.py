@@ -1048,6 +1048,23 @@ It is recommended to save it somewhere other than your SD card used with the SF2
             msgBox.close()
             QMessageBox.about(self, "Failure","ERROR: Something went wrong while trying to create the save backup")    
         
+    def restoreSaveBackup(self):
+        drive = self.combobox_drive.currentText()
+        path = QFileDialog.getOpenFileName()
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("Creating Save Backup")
+        msgBox.setText("Please Wait")
+        msgBox.show()
+        if path == '':
+            #User clicked cancel so just bail
+            return
+        # TODO actually write this function
+        if tadpole_functions.restoreSaveBackup(drive, path):
+            msgBox.close()
+        else:
+            msgBox.close()
+
+    
     def copyRoms(self):
         drive = window.combobox_drive.currentText()
         console = window.combobox_console.currentText()
