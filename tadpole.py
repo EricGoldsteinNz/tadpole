@@ -848,8 +848,8 @@ from tzlion on frogtool. Special thanks also goes to wikkiewikkie & Jason Grieve
     The SF2000 may not boot.  You can always try this fix again in the Firmware options")
                 logging.info("User skipped bootloader")
                 return
-        bootloaderPatchDir = os.path.join(drive,"/UpdateFirmware/")
-        bootloaderPatchPathFile = os.path.join(drive,"/UpdateFirmware/Firmware.upk")
+        bootloaderPatchDir = os.path.join(drive,"UpdateFirmware/")
+        bootloaderPatchPathFile = os.path.join(drive,"UpdateFirmware/Firmware.upk")
         bootloaderChecksum = "eb7a4e9c8aba9f133696d4ea31c1efa50abd85edc1321ce8917becdc98a66927"
         #Let's delete old stuff if it exits incase they tried this before and failed
         if Path(bootloaderPatchDir).is_dir():
