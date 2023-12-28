@@ -29,6 +29,7 @@ import time
 # Tadpole imports
 import frogtool
 import tadpole_functions
+from tadpole_functions import read_top_games
 from tadpoleConfig import TadpoleConfig
 import multicore_functions
 # Dialog imports
@@ -65,6 +66,7 @@ def RunFrogTool(drive, console):
     if drive == 'N/A':
         logging.warning("You are trying to run froggy with no drive.")
         return
+    top_games_list = []
     print(f"Running frogtool with drive ({drive}) and console ({console})")
     logging.info(f"Running frogtool with drive ({drive}) and console ({console})")
     try:
@@ -78,7 +80,10 @@ def RunFrogTool(drive, console):
             rebuildingmsgBox.showProgress(progress, True)
             rebuildingmsgBox.show()
             for console in frogtool.systems.keys():
-                result = frogtool.process_sys(drive, console, False)
+                if tpConf.getTopGamesEnabled():
+                    print("Top Games feature enabled - sorting game list with Top Games List at the top")
+                    top_games_list = read_top_games(console)
+                result = frogtool.process_sys(drive, console, False, top_games_list)
                 #Update Progress
                 progress += 10
                 rebuildingmsgBox.showProgress(progress, True)
@@ -86,7 +91,10 @@ def RunFrogTool(drive, console):
             rebuildingmsgBox.close()
             QMessageBox.about(window, "Result", "Rebuilt all ROMS for all systems")
         else:
-            result = frogtool.process_sys(drive, console, False)
+            if tpConf.getTopGamesEnabled():
+                print("Top Games feature enabled - sorting game list with Top Games List at the top")
+                top_games_list = read_top_games(console)
+            result = frogtool.process_sys(drive, console, False, top_games_list)
             print("Result " + result)      
         #Always reload the table now that the folders are all cleaned up
         window.loadROMsToTable()
@@ -1296,6 +1304,13 @@ Note: You can change in settings to either pick your own or try to downlad autom
             start_time = time.perf_counter()
             #sort the list aphabetically before we go through it
             files = sorted(files)
+            if tpConf.getTopGamesEnabled():  #sort with top games at the top if Top Games feature is enabled
+                print("Top Games feature enabled - sorting game list with Top Games List at the top")
+                top_games_list = read_top_games(system)
+                if top_games_list:
+                    top_sorted = [game for game in top_games_list if game in files]
+                    remainder_games_sorted = [game for game in files if game not in top_sorted]
+                    files = top_sorted + remainder_games_sorted
             for i,game in enumerate(files):
                 objGame = sf2000ROM(os.path.join(roms_path, game))
                 if objGame.ROMlocation == '':

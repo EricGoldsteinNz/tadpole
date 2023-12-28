@@ -1,0 +1,188 @@
+ARCADE:
+Aero Fighters 2.zfb
+Alien vs. Predator.zfb
+Baseball Stars 2.zfb
+Blazing Star.zfb
+Garou -Mark of the Wolves.zfb
+Marvel Super Heroes.zfb
+Marvel Vs. Capcom- Clash of Super Heroes.zfb
+Matrimelee.zfb
+Metal Slug 3.zfb
+Neo Bomberman.zfb
+Neo Turf Masters.zfb
+Progear.zfb
+Real Bout Fatal Fury Special.zfb
+Samurai Shodown IV -Amakusa's Revenge.zfb
+Saturday Night Slam Masters.zfb
+Shock Troopers.zfb
+Street Fighter Alpha 3.zfb
+Street Fighter II- The World Warrior.zfb
+Super Puzzle Fighter II Turbo.zfb
+The King of Fighters '97.zfb
+The King of Fighters '98 -The Slugfest.zfb
+The Punisher.zfb
+U.N. Squadron.zfb
+Vampire Savior- The Lord of Vampire.zfb
+Zupapa!.zfb
+
+GB:
+Balloon Kid.zgb
+Batman.zgb
+Battletoads in Ragnarok's World.zgb
+Bomberman GB.zgb
+Castlevania II - Belmont's Revenge.zgb
+Donkey Kong.zgb
+Donkey Kong Land.zgb
+Dr. Mario.zgb
+Final Fantasy Adventure.zgb
+Megaman V.zgb
+Kid Icarus - Of Myths and Monsters.zgb
+Kirby's Dream Land.zgb
+Lemmings.zgb
+Metroid II - Return of Samus.zgb
+Mole Mania.zgb
+Operation C.zgb
+Pokemon - Red Version.zgb
+Pokemon - Blue Version.zgb
+R-Type.zgb
+Super Mario Land.zgb
+Super Mario Land 2 - 6 Golden Coins.zgb
+Teenage Mutant Ninja Turtles - Fall of the Foot Clan.zgb
+Tetris.zgb
+The Legend of Zelda - Link's Awakening.zgb
+Wario Land - Super Mario Land 3.zgb
+
+GBC:
+Conker's Pocket Tales.zgb
+Donkey Kong Country.zgb
+Dragon Warrior III.zgb
+Harvest Moon 2 GBC.zgb
+Mario Golf.zgb
+Mario Tennis.zgb
+MegaMan Xtreme.zgb
+Metal Gear Solid.zgb
+Pocket Bomberman.zgb
+Pokemon - Crystal Version.zgb
+Pokemon - Gold Version.zgb
+Pokemon - Silver Version.zgb
+Rayman.zgb
+Resident Evil Gaiden.zgb
+R-Type DX.zgb
+Shantae.zgb
+Super Mario Bros. Deluxe.zgb
+Survival Kids.zgb
+Tetris DX.zgb
+The Legend of Zelda - Link's Awakening DX.zgb
+The Legend of Zelda - Oracle of Ages.zgb
+The Legend of Zelda - Oracle of Seasons.zgb
+Tomb Raider.zgb
+Warioland II.zgb
+Warioland 3.zgb
+
+GBA:
+Advance Wars.zgb
+Astro Boy - Omega Factor.zgb
+Castlevania - Aria of Sorrow.zgb
+Castlevania - Circle of the Moon.zgb
+Castlevania - Harmony of Dissonance.zgb
+F-Zero - Maximum Velocity.zgb
+Fire Emblem - The Sacred Stones.zgb
+Golden Sun.zgb
+Kirby - Nightmare in Dream Land.zgb
+Mario & Luigi - Superstar Saga.zgb
+Mario Kart - Super Circuit.zgb
+Megaman Zero.zgb
+Metroid - Zero Mission.zgb
+Metroid Fusion.zgb
+Pokemon - Emerald Version.zgb
+Pokemon - Ruby Version.zgb
+Pokemon - Sapphire Version.zgb
+Sonic Advance 2.zgb
+Sonic Advance 3.zgb
+Sonic Advance.zgb
+Super Mario Advance 2 - Super Mario World.zgb
+Super Mario Advance 4 - Super Mario Bros. 3.zgb
+Super Mario Advance.zgb
+Sword of Mana.zgb
+Zone of the Enders - The Fist of Mars.zgb
+
+FC:
+Adventure Island 2.zfc
+Battletoads 1.zfc
+Bubble Bobble 1.zfc
+Castlevania.zfc
+Contra 1.zfc
+Double Dragon 1.zfc
+Dr Mario.zfc
+Excitebike.zfc
+Final Fantasy.zfc
+Gauntlet 2.zfc
+Ghostn Goblins.zfc
+Gradius 1.zfc
+Kirbys adventure.zfc
+Kung Fu.zfc
+Mega Man 2.zfc
+Metroid.zfc
+Ninja Gaiden 1.zfc
+Punch Out.zfc
+StarTropics.zfc
+Super Mario Bros 1.zfc
+Super Mario Bros 2.zfc
+Super Mario Bros 3.zfc
+Tecmo Bowl.zfc
+The Legend of Zelda 2.zfc
+The Legend of Zelda.zfc
+
+SFC:
+Actraiser.zsf
+Breath Of Fire II.zsf
+Chrono Trigger.zsf
+Contra III - The Alien Wars.zsf
+Donkey Kong Country.zsf
+Donkey Kong Country 2 - Diddy's Kong Quest.zsf
+Earthbound.zsf
+Earthworm Jim.zsf
+Final Fantasy II.zsf
+Final Fantasy III.zsf
+F-Zero.zsf
+Kirby Super Star.zsf
+The Legend Of Zelda - A Link To The Past.zsf
+Mega Man X.zsf
+Secret Of Mana.zsf
+Simcity.zsf
+Super Castlevania Iv.zsf
+Super Ghouls'n Ghosts.zsf
+Super Mario All-Stars.zsf
+Super Mario Kart.zsf
+Super Mario World.zsf
+Super Metroid.zsf
+Super Punch-Out!!.zsf
+Super Street Fighter II.zsf
+Terranigma.zsf
+
+MD:
+Altered Beast.zmd
+Beyond Oasis.zmd
+Castlevania - Bloodlines.zmd
+Comix Zone.zmd
+Earthworm Jim.zmd
+Ecco the Dolphin.zmd
+Golden Axe.zmd
+Gunstar Heroes.zmd
+Mortal Kombat II.zmd
+NBA Jam.zmd
+Phantasy Star IV.zmd
+Ristar.zmd
+Rocket Knight Adventures.zmd
+Shining Force II.zmd
+Shinobi III - Return of the Ninja Master.zmd
+Sonic & Knuckles.zmd
+Sonic The Hedgehog 1.zmd
+Sonic The Hedgehog 2.zmd
+Sonic The Hedgehog 3.zmd
+Streets of Rage 2.zmd
+Streets of Rage 3.zmd
+Strider.zmd
+Teenage Mutant Hero Turtles - The Hyperstone Heist.zmd
+ToeJam & Earl.zmd
+Vectorman.zmd
