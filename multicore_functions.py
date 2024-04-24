@@ -95,11 +95,25 @@ def makeMulticoreROMList_ARCADEMode(drive):
             print(f"Got to {d}")
             romfolder = os.path.join(drive,"ROMS",d)
             if os.path.exists(romfolder):
+                destination_zfb = "ARCADE"
+                if "snes" in d:
+                    destination_zfb = "SFC"
+                elif "nes" in d:
+                    destination_zfb = "FC"
+                elif "gba" in d:
+                    destination_zfb = "GBA"
+                elif "gbc" in d:
+                    destination_zfb = "GBC"
+                elif "gb" in d:
+                    destination_zfb = "GB"
+                elif "sega" in d:
+                    destination_zfb = "MD"
+
                 for rom in os.listdir(romfolder):
-                    dest_filename = os.path.join(drive, "ARCADE",f"{os.path.splitext(rom)[0]}.zfb")
+                    dest_filename = os.path.join(drive, destination_zfb, f"{os.path.splitext(rom)[0]}.zfb")
                     if(not os.path.exists(dest_filename) and rom not in multicore_exclusionList):
                         romcount += 1
                         # Creates a new file 
                         multicore_rom_string = f"{d};{rom}.gba" 
-                        CreateMulticoreZFB(multicore_rom_string,dest_filename)
+                        CreateMulticoreZFB(multicore_rom_string, dest_filename)
     return romcount

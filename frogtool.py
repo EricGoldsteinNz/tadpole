@@ -221,7 +221,16 @@ def rgb565_convert(src_filename, dest_filename, dest_size=None):
     image.paste(srcimage, None)
 
     if dest_size and image.size != dest_size:
-        # x, y = image.size
+        ratio = dest_size[1] / dest_size[0]
+        if ((image.size[0] * ratio) > image.size[1]):
+            width = image.size[1]/ratio
+            left = int((image.size[0] - width)/2)
+            image = image.crop((left, 0, left + width, image.size[1]))
+        else:
+            height = image.size[0]*ratio
+            top = int((image.size[1] - height)/2)
+            image = image.crop((0, top, image.size[0], top + height))
+
         # new_size=(144, 208)
         # fill_color=(0, 0, 0, 0)
         # size_x = max(dest_size[0], x)

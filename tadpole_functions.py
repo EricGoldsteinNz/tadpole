@@ -1297,7 +1297,7 @@ def addThumbnail(rom_path, drive, system, new_thumbnail, ovewrite):
                 if not changeZIPThumbnail(rom_path, new_thumbnail, system):
                     return False
             #If its the supported system .z** pass to frogtool
-            elif romExtension == sys_zxx_ext:
+            elif romExtension in frogtool.zxx_ext.values():
                 if ovewrite == True:
                     if not changeZXXThumbnail(rom_path, new_thumbnail):
                         return False
